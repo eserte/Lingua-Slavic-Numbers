@@ -3,7 +3,7 @@ use strict;
 use Test;
 use utf8;
 BEGIN { plan tests => 4 }
-use Lingua::Slavic::Numbers qw( number_to_bg );
+use Lingua::Slavic::Numbers qw( LANG_BG number_to_slavic );
 $Lingua::Slavic::Numbers::DEBUG=1;
 use vars qw(%numbers);
 do 't/rig.pm';
@@ -19,4 +19,4 @@ use vars qw(%numbers);
 # switch off warnings
 $SIG{__WARN__} = sub {};
 
-rig(\%numbers, \&number_to_bg);
+rig(\%numbers, sub { number_to_slavic(LANG_BG, @_) });

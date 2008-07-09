@@ -1,15 +1,26 @@
---- #YAML:1.0
-name:                Lingua-Slavic-Numbers
-version:             0.01
-abstract:            Converts numeric values into their Slavic
-license:             ~
-generated_by:        ExtUtils::MakeMaker version 6.36
-distribution_type:   module
-requires:     
-    List::Util:                    1
-    Regexp::Common:                1
-meta-spec:
-    url:     http://module-build.sourceforge.net/META-spec-v1.2.html
-    version: 1.2
+---
+name: Lingua-Slavic-Numbers
+version: 0.02
 author:
-    - Ted Zlatanov <tzz@lifelogs.com>
+  - 'Ted Zlatanov <tzz@lifelogs.com>'
+abstract: |-
+  Converts numeric values into their Slavic
+  string equivalents.  Bulgarian is supported so far.
+license: perl
+resources:
+  license: http://dev.perl.org/licenses/
+requires:
+  List::Util: 0
+  Regexp::Common: 0
+  perl: 5.6.1
+provides:
+  Lingua::BG::Numbers:
+    file: lib/Lingua/BG/Numbers.pm
+    version: 0.02
+  Lingua::Slavic::Numbers:
+    file: lib/Lingua/Slavic/Numbers.pm
+    version: 0.02
+generated_by: Module::Build version 0.2808
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.2.html
+  version: 1.2

@@ -2,11 +2,11 @@
 use strict;
 use Test;
 BEGIN { plan tests => 0 }
-use Lingua::Slavic::Numbers qw( LANG_BG number_to_bg );
+use Lingua::Slavic::Numbers qw( LANG_BG );
 
 use vars qw(%numbers);
 
-# DISABLED for 0.01
+# DISABLED for now
 
 # do 't/decimals';
 # do 't/rig.pm';

@@ -23,11 +23,10 @@ use constant FEMININE_GENDER => 'fem';
 use constant MASCULINE_GENDER => 'man';
 use constant NEUTRAL_GENDER => 'neu';
  
-$VERSION                  = 0.01;
+$VERSION                  = 0.02;
 $DEBUG                    = 0;
 @ISA                      = qw(Exporter);
-@EXPORT_OK                = qw( &number_to_slavic &ordinate_to_slavic
-				&number_to_bg &ordinate_to_bg LANG_BG);
+@EXPORT_OK                = qw( &number_to_slavic &ordinate_to_slavic LANG_BG);
 @EXPORT = @EXPORT_OK;
 
 $MINUS = ('минус');
@@ -172,9 +171,6 @@ foreach my $lang (keys %NUMBER_NAMES)
 }
 
 sub deb { print @_ if $DEBUG }
-
-sub ordinate_to_bg { return ordinate_to_slavic(LANG_BG, @_); }
-sub number_to_bg { return number_to_slavic(LANG_BG, @_); }
 
 sub ordinate_to_slavic
 {
@@ -601,10 +597,10 @@ string equivalents.  Bulgarian is supported so far.
 =head1 SYNOPSIS
 
  # Procedural Style
- use Lingua::Slavic::Numbers qw(number_to_bg ordinate_to_bg);
- print number_to_bg( 345 );
+ use Lingua::Slavic::Numbers qw(number_to_slavic ordinate_to_slavic);
+ print number_to_slavic('bg', 345 );
 
- my $twenty  = ordinate_to_bg( 20 );
+ my $twenty  = ordinate_to_slavic('bg', 20 );
  print "Ordinate of 20 is $twenty";
 
  # OO Style
@@ -636,10 +632,10 @@ If you plan to use this module with greater numbers (>10e20), you can use
 the Math::BigInt module:
 
  use Math::BigInt;
- use Lingua::Slavic::Numbers qw( number_to_bg );
+ use Lingua::Slavic::Numbers qw( number_to_slavic );
 
  my $big_num = new Math::BigInt '1.23e68';
- print number_to_bg($big_num);
+ print number_to_slavic('bg', $big_num);
 
 TODO
 This module should output strings for numbers up to, but not including,
@@ -652,11 +648,11 @@ at least for now.
 
 =head1 FUNCTION-ORIENTED INTERFACE
 
-=head2 number_to_bg( $number )
+=head2 number_to_slavic( $lang, $number )
 
- use Lingua::Slavic::Numbers qw(number_to_bg);
- my $depth = number_to_bg( 20_000 );
- my $year  = number_to_bg( 1870 );
+ use Lingua::Slavic::Numbers qw(number_to_slavic);
+ my $depth = number_to_slavic('bg', 20_000 );
+ my $year  = number_to_slavic('bg', 1870 );
 
  # in honor of Lingua::FR::Numbers, which I copied to start this
  # module, I'm using a French example
@@ -664,10 +660,10 @@ at least for now.
 
 This function can be exported by the module.
 
-=head2 ordinate_to_bg( $number )
+=head2 ordinate_to_slavic( $lang, $number )
  
- use Lingua::Slavic::Numbers qw(ordinate_to_bg);
- my $twenty  = ordinate_to_bg( 20 );
+ use Lingua::Slavic::Numbers qw(ordinate_to_slavic);
+ my $twenty  = ordinate_to_slavic('bg', 20 );
  print "Номер $twenty";
 
 This function can be exported by the module.

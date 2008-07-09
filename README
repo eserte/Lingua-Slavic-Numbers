@@ -1,90 +1,103 @@
 NAME
-    Lingua::Slavic::Numbers - Converts numeric values into their French
-    string equivalents
+    Lingua::Slavic::Numbers - Converts numeric values into their Slavic
+    string equivalents. Bulgarian is supported so far.
 
 SYNOPSIS
      # Procedural Style
-     use Lingua::FR::Numbers qw(number_to_fr ordinate_to_fr);
-     print number_to_fr( 345 );
+     use Lingua::Slavic::Numbers qw(number_to_slavic ordinate_to_slavic);
+     print number_to_slavic('bg', 345 );
 
-     my $vingt  = ordinate_to_fr( 20 );
-     print "Tintin est reporter au petit $vingt";
+     my $twenty  = ordinate_to_slavic('bg', 20 );
+     print "Ordinate of 20 is $twenty";
 
      # OO Style
-     use Lingua::FR::Numbers;
-     my $number = Lingua::FR::Numbers->new( 123 );
+     use Lingua::Slavic::Numbers;
+     # specifies default language
+     my $number = Lingua::Slavic::Numbers->new( 123, Lingua:Slavic::Numbers::LANG_BG );
      print $number->get_string;
      print $number->get_ordinate;
+     # override language
+     print $number->get_string(Lingua:Slavic::Numbers::LANG_BG);
+     print $number->get_ordinate(Lingua:Slavic::Numbers::LANG_BG);
 
-     my $other_number = Lingua::FR::Numbers->new;
+     # default language, no number
+     my $other_number = Lingua::Slavic::Numbers->new(Lingua:Slavic::Numbers::LANG_BG);
      $other_number->parse( 7340 );
-     $french_string = $other_number->get_string;
+     $bg_string = $other_number->get_string;
 
 DESCRIPTION
-    This module converts a number into a French cardinal or ordinal. It
-    supports decimal numbers, but this feature is experimental.
+    This module converts a number into a Slavic-language cardinal or
+    ordinal. Bulgarian is supported so far.
 
-    The interface tries to conform to the one defined in
-    Lingua::EN::Number, though this module does not provide any parse()
-    method. Also, unlike Lingua::En::Numbers, you can use this module in
-    a procedural manner by importing the number_to_fr() function.
+    The interface tries to conform to the one defined in Lingua::EN::Number,
+    though this module does not provide any parse() method. Also, unlike
+    Lingua::En::Numbers, you can use this module in a procedural manner by
+    importing the number_to_LL() function (LL=bg so far).
 
-    If you plan to use this module with greater numbers (>10e20), you
-    can use the Math::BigInt module:
+    If you plan to use this module with greater numbers (>10e20), you can
+    use the Math::BigInt module:
 
      use Math::BigInt;
-     use Lingua::FR::Numbers qw( number_to_fr );
+     use Lingua::Slavic::Numbers qw( number_to_slavic );
 
      my $big_num = new Math::BigInt '1.23e68';
-     print number_to_fr($big_num);
-     # cent vingt-trois quintillions de sextillions
+     print number_to_slavic('bg', $big_num);
 
-    This module should output strings for numbers up to, but not
-    including, 1e75, but due to a lack of documentation in French
-    grammar, it can only reliably output strings for numbers lower than
-    1e51. For example, 1e72 is 'un sextillion de sextillion', but I am
-    unable to say 1e51 or 1e69, at least for now.
+    TODO This module should output strings for numbers up to, but not
+    including, 1e75, but due to a lack of documentation in French grammar,
+    it can only reliably output strings for numbers lower than 1e51. For
+    example, 1e72 is 'un sextillion de sextillion', but I am unable to say
+    1e51 or 1e69, at least for now.
 
   VARIABLES
 FUNCTION-ORIENTED INTERFACE
-  number_to_fr( $number )
-     use Lingua::FR::Numbers qw(number_to_fr);
-     my $depth = number_to_fr( 20_000 );
-     my $year  = number_to_fr( 1870 );
-     print "Jules Vernes �crivit _$depth lieues sous les mers_ en $year.";
+  number_to_slavic( $lang, $number )
+     use Lingua::Slavic::Numbers qw(number_to_slavic);
+     my $depth = number_to_slavic('bg', 20_000 );
+     my $year  = number_to_slavic('bg', 1870 );
+
+     # in honor of Lingua::FR::Numbers, which I copied to start this
+     # module, I'm using a French example
+     print "Жул Верн написа ,,$depth левги под морето'' в $year.";
 
     This function can be exported by the module.
 
-  ordinate_to_fr( $number )
-     use Lingua::FR::Numbers qw(ordinate_to_fr);
-     my $twenty  = ordinate_to_fr( 20 );
-     print "Tintin est reporter au petit $twenty";
+  ordinate_to_slavic( $lang, $number )
+     use Lingua::Slavic::Numbers qw(ordinate_to_slavic);
+     my $twenty  = ordinate_to_slavic('bg', 20 );
+     print "Номер $twenty";
 
     This function can be exported by the module.
+
+CONSTANTS
+    Bulgarian: Lingua:Slavic::Numbers::LANG_BG ('bg')
 
 OBJECT-ORIENTED INTERFACE
-  new( [ $number ] )
-     my $start = Lingua::FR::Numbers->new( 500 );
-     my $end   = Lingua::FR::Numbers->new( 3000 );
-     print "Nous part�mes ", $start->get_string, 
+  new( [ $number ] [, $language] )
+     my $start = Lingua::Slavic::Numbers->new( 500, Lingua:Slavic::Numbers::LANG_BG);
+     my $end   = Lingua::Slavic::Numbers->new( 3000 );
+    TODO
+     print "Nous partîmes ", $start->get_string, 
            "; mais par un prompt renfort\n",
-           "Nous nous v�mes ", $end->get_string," en arrivant au port"
+           "Nous nous vîmes ", $end->get_string," en arrivant au port"
 
     Creates and initializes a new instance of an object.
 
-  parse( $number )
-    Initializes (or reinitializes) the instance.
+  parse( $number [, $language] )
+    Initializes (or reinitializes) the instance, and sets the default
+    language if given.
 
-  get_string()
+  get_string([$language])
      my $string = $number->get_string;
  
-    Returns the number as a formatted string in French, lowercased.
+    Returns the number as a formatted string in the requested language or
+    the default, lowercased.
 
   get_ordinate()
-     my $string = $number->get_ordinate;
+     my $string = $number->get_ordinate([$language]);
  
-    Returns the ordinal representation of the number as a formatted
-    string in French, lowercased.
+    Returns the ordinal representation of the number as a formatted string
+    in the requested language or the default, lowercased.
 
 DIAGNOSTICS
     Invalid number format: '$number'
@@ -92,29 +105,25 @@ DIAGNOSTICS
 
     Number '$number' too big to be represented as string
         (W) The number is too big to be converted into a string. Numbers
-            must be lower than 1e75-1.
+        must be lower than 1e75-1.
 
 SOURCE
-    *Le fran�ais correct - Maurice GREVISSE*
-
-    *D�cret n� 61-501 du 3 mai 1961. relatif aux unit�s de mesure et au
-    contr�le des instruments de mesure.* -
-    http://www.adminet.com/jo/dec61-501.html
+    Lingua::FR::Numbers for the code
 
 BUGS
-    Though the module should be able to convert big numbers (up to
-    10**36), I do not know how Perl handles them.
+    Though the module should be able to convert big numbers (up to 10**36),
+    I do not know how Perl handles them.
 
-    Please report any bugs or comments using the Request Tracker
-    interface:
-    https://rt.cpan.org/NoAuth/Bugs.html?Dist=Lingua-FR-Numbers
+    Please report any bugs or comments using the Request Tracker interface:
+    https://rt.cpan.org/NoAuth/Bugs.html?Dist=Lingua-Slavic-Numbers
 
 COPYRIGHT
-    Copyright 2002, Briac Pilpr�. All Rights Reserved. This module can
-    be redistributed under the same terms as Perl itself.
+    Copyright 2008, Ted Zlatanov (Теодор Златанов). All Rights
+    Reserved. This module can be redistributed under the same terms as Perl
+    itself.
 
 AUTHOR
-    Briac Pilpr� <briac@cpan.org>
+    Ted Zlatanov <tzz@lifelogs.com>
 
 SEE ALSO
     Lingua::EN::Numbers, Lingua::Word2Num
