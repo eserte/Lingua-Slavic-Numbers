@@ -23,7 +23,7 @@ use constant FEMININE_GENDER => 'fem';
 use constant MASCULINE_GENDER => 'man';
 use constant NEUTRAL_GENDER => 'neu';
  
-$VERSION                  = 0.02;
+$VERSION                  = 0.03;
 $DEBUG                    = 0;
 @ISA                      = qw(Exporter);
 @EXPORT_OK                = qw( &number_to_slavic &ordinate_to_slavic LANG_BG);
@@ -637,15 +637,6 @@ the Math::BigInt module:
  my $big_num = new Math::BigInt '1.23e68';
  print number_to_slavic('bg', $big_num);
 
-TODO
-This module should output strings for numbers up to, but not including,
-1e75, but due to a lack of documentation in French grammar, it can only
-reliably output strings for numbers lower than 1e51. For example, 1e72
-is 'un sextillion de sextillion', but I am unable to say 1e51 or 1e69,
-at least for now.
-
-=head2 VARIABLES
-
 =head1 FUNCTION-ORIENTED INTERFACE
 
 =head2 number_to_slavic( $lang, $number )
@@ -671,54 +662,6 @@ This function can be exported by the module.
 =head1 CONSTANTS
 
 Bulgarian: Lingua:Slavic::Numbers::LANG_BG ('bg')
-
-=head1 OBJECT-ORIENTED INTERFACE
-
-=head2 new( [ $number ] [, $language] )
-
- my $start = Lingua::Slavic::Numbers->new( 500, Lingua:Slavic::Numbers::LANG_BG);
- my $end   = Lingua::Slavic::Numbers->new( 3000 );
-TODO
- print "Nous partîmes ", $start->get_string, 
-       "; mais par un prompt renfort\n",
-       "Nous nous vîmes ", $end->get_string," en arrivant au port"
-
-Creates and initializes a new instance of an object.
-
-=head2 parse( $number [, $language] )
-
-Initializes (or reinitializes) the instance, and sets the default
-language if given.
-
-=head2 get_string([$language])
-
- my $string = $number->get_string;
- 
-Returns the number as a formatted string in the requested language or
-the default, lowercased.
-
-=head2 get_ordinate()
-
- my $string = $number->get_ordinate([$language]);
- 
-Returns the ordinal representation of the number as a formatted string
-in the requested language or the default, lowercased.
-
- 
-=head1 DIAGNOSTICS
-
-=over
-
-=item Invalid number format: '$number'
-
-(W) The number specified is not in a valid numeric format.
-
-=item Number '$number' too big to be represented as string
-
-(W) The number is too big to be converted into a string. Numbers must be
-lower than 1e75-1.
-
-=back
 
 =head1 SOURCE
 
