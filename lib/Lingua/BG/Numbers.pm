@@ -6,7 +6,7 @@ use Exporter;
 use vars qw( $VERSION @EXPORT_OK @EXPORT @ISA);
 @EXPORT_OK                = qw( &number_to_bg &ordinate_to_bg );
 @EXPORT = @EXPORT_OK;
-$VERSION = 0.02;
+$VERSION = 0.03;
 @ISA                      = qw(Exporter);
 
 sub ordinate_to_bg { return Lingua::Slavic::Numbers::ordinate_to_slavic(LANG_BG, @_); }
