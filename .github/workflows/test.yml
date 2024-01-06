@@ -12,6 +12,8 @@ on:
 jobs:
   create-dist:
     runs-on: ubuntu-latest
+    outputs:
+      dist: ${{ steps.get-dist-name.outputs.dist }}
     steps:
       - uses: actions/checkout@v4
       - name: Install prereqs
@@ -23,36 +25,63 @@ jobs:
           perl Build.PL
           ./Build
           ./Build dist
+      - id: get-dist-name
+        run: |
+          echo "dist=$(ls -1 *.tar.gz)" >> $GITHUB_OUTPUT
       - uses: actions/upload-artifact@v3
         with:
           name: dist
-          path: "*.tar.gz"
+          path: ${{ steps.get-dist-name.outputs.dist }}
 
   test:
-    name: Test with perl ${{ matrix.perlimage }}
-    runs-on: ubuntu-latest
-    container: perl:${{ matrix.perlimage }}
+    name: Test on ${{ matrix.container || matrix.runs-on }}
+    runs-on: ${{ matrix.runs-on }}
+    container: ${{ matrix.container }}
     strategy:
       matrix:
         include:
-          - perlimage: 5.8.9-threaded-stretch
-          - perlimage: 5.10.1-buster
-          - perlimage: 5.12.5-stretch
-          - perlimage: 5.14.4-stretch
-          - perlimage: 5.16.3-buster
-          - perlimage: 5.18.4-buster
-          - perlimage: 5.22.4-stretch
-          - perlimage: 5.30.3-threaded-buster
-          - perlimage: 5.36.0-slim-bullseye
-          - perlimage: 5.38.0-slim-bookworm
+          - { runs-on: ubuntu-latest, container: "perl:5.8.9-threaded-stretch" }
+          - { runs-on: ubuntu-latest, container: "perl:5.10.1-buster" }
+          - { runs-on: ubuntu-latest, container: "perl:5.12.5-stretch" }
+          - { runs-on: ubuntu-latest, container: "perl:5.14.4-stretch" }
+          - { runs-on: ubuntu-latest, container: "perl:5.16.3-buster" }
+          - { runs-on: ubuntu-latest, container: "perl:5.18.4-buster" }
+          - { runs-on: ubuntu-latest, container: "perl:5.22.4-stretch" }
+          - { runs-on: ubuntu-latest, container: "perl:5.30.3-threaded-buster" }
+          - { runs-on: ubuntu-latest, container: "perl:5.36.0-slim-bullseye" }
+          - { runs-on: ubuntu-latest, container: "perl:5.38.0-slim-bookworm" }
+          - { runs-on: macos-11 }
+          - { runs-on: macos-12 }
+          - { runs-on: ubuntu-latest }
+          - { runs-on: windows-latest }
     needs: create-dist
     steps:
       - uses: actions/download-artifact@v3
         with:
           name: dist
+
+      - name: Mac prereqs
+        run: |
+          brew install cpanminus
+        if: "startsWith(matrix.runs-on, 'macos-')"
+      - name: Windows prereqs
+        run: |
+          if (!(Test-Path -Path "C:\strawberry")) {
+            cinst strawberryperl
+          }
+        if: "startsWith(matrix.runs-on, 'windows-')"
+      - name: Ubuntu prereqs
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -qy --no-install-recommends cpanminus
+        if: "startsWith(matrix.runs-on, 'ubuntu-') && !matrix.container"
+
       - name: Prereqs for older perls
         run: |
           perl -e 'exit($] >= 5.010 ? 0 : 1)' || cpanm Regexp::Common@2016020301
+        if: "!startsWith(matrix.runs-on, 'windows-')"
+        # note: windows would need another command line, but not needed anyway
+
       - name: Test with cpanm
         run: |
-          cpanm --test --verbose *.tar.gz
+          cpanm --test --verbose ${{ needs.create-dist.outputs.dist }}
