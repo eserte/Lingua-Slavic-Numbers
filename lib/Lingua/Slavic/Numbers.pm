@@ -346,7 +346,7 @@ sub bulgarian_triplets
    push @inter_options, $inflexion if $inflexion;
    my $inter_options = join ':', @inter_options;
    
-   $inter[-1] =~ s/({.*})/{$1$inter_options}/;
+   $inter[-1] =~ s/(\{.*\})/{$1$inter_options}/;
 
    my $inter = join(' ', @inter);
    deb("bulgarian_triplets calling interpolate_string with [$inter]\n");
@@ -537,14 +537,14 @@ sub interpolate_string
 
  
  while ($data =~ m/\[$RE{num}{real}{-sep=>'[,.]?'}\]+/ || # [number]
-	$data =~ m/{$RE{num}{real}{-sep=>'[,.]?'}}+/)	  # {number}
+	$data =~ m/\{$RE{num}{real}{-sep=>'[,.]?'}\}+/)	  # {number}
  {
-  $data =~ s/{
-	     {
+  $data =~ s/\{
+	     \{
 	     $RE{num}{dec}{-sep=>'[,.]?'}{-keep}
-	     }
+	     \}
 	     ([:\w]+)?
-	     }
+	     \}
 	    /
 	     number_to_slavic($lang,
 			      $1,
