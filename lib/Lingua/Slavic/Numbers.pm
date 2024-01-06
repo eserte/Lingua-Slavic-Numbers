@@ -23,7 +23,7 @@ use constant FEMININE_GENDER => 'fem';
 use constant MASCULINE_GENDER => 'man';
 use constant NEUTRAL_GENDER => 'neu';
  
-$VERSION                  = 0.03;
+$VERSION                  = 0.04;
 $DEBUG                    = 0;
 @ISA                      = qw(Exporter);
 @EXPORT_OK                = qw( &number_to_slavic &ordinate_to_slavic LANG_BG);
