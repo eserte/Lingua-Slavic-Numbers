@@ -1,6 +1,9 @@
 Lingua::Slavic::Numbers Changelog
 -----------------------------
 
+0.06
+     - git repository in META.*
+
 0.05
      - pod improvements and fixes (RT #37187)
 
