@@ -18,6 +18,8 @@ __END__
 
 =pod
 
+=encoding utf-8
+
 =head1 NAME
 
 Lingua::BG::Numbers - Converts numeric values into their Bulgarian
@@ -58,11 +60,11 @@ This function can be exported by the module.
 
 =head1 DESCRIPTION
 
- See Lingua::Slavic::Numbers
+See L<Lingua::Slavic::Numbers>
 
 =head1 BUGS
 
- See Lingua::Slavic::Numbers
+See L<Lingua::Slavic::Numbers>
 
 =head1 COPYRIGHT
 
@@ -76,5 +78,5 @@ Ted Zlatanov <tzz@lifelogs.com>
 
 =head1 SEE ALSO
 
-Lingua::Slavic::Numbers, Lingua::EN::Numbers, Lingua::Word2Num
+L<Lingua::Slavic::Numbers>, L<Lingua::EN::Numbers>, L<Lingua::Word2Num>
 
