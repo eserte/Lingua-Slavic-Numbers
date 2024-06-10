@@ -50,6 +50,7 @@ jobs:
           - { runs-on: ubuntu-latest, container: "perl:5.30.3-threaded-buster" }
           - { runs-on: ubuntu-latest, container: "perl:5.36.0-slim-bullseye" }
           - { runs-on: ubuntu-latest, container: "perl:5.38.0-slim-bookworm" }
+          - { runs-on: ubuntu-latest, container: "perl:5.40.0-slim-bookworm" }
           - { runs-on: macos-12 }
           - { runs-on: macos-13 }
           - { runs-on: ubuntu-latest }
