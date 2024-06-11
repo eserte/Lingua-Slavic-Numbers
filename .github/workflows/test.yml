@@ -28,7 +28,7 @@ jobs:
       - id: get-dist-name
         run: |
           echo "dist=$(ls -1 *.tar.gz)" >> $GITHUB_OUTPUT
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: dist
           path: ${{ steps.get-dist-name.outputs.dist }}
@@ -36,7 +36,6 @@ jobs:
   test:
     name: Test on ${{ matrix.container || matrix.runs-on }}
     runs-on: ${{ matrix.runs-on }}
-    container: ${{ matrix.container }}
     strategy:
       matrix:
         include:
@@ -57,7 +56,7 @@ jobs:
           - { runs-on: windows-latest }
     needs: create-dist
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: dist
 
@@ -77,12 +76,15 @@ jobs:
           sudo apt-get install -qy --no-install-recommends cpanminus
         if: "startsWith(matrix.runs-on, 'ubuntu-') && !matrix.container"
 
-      - name: Prereqs for older perls
-        run: |
-          perl -e 'exit($] >= 5.010 ? 0 : 1)' || cpanm Regexp::Common@2016020301
-        if: "!startsWith(matrix.runs-on, 'windows-')"
-        # note: windows would need another command line, but not needed anyway
-
-      - name: Test with cpanm
+      - name: Test with cpanm (host)
         run: |
           cpanm --test --verbose ${{ needs.create-dist.outputs.dist }}
+        if: "!matrix.container"
+
+      - name: Test with cpanm (container)
+        run: |
+          docker run -i -v $(pwd):/tmp/dist:ro ${{ matrix.container }} sh <<'EOF'
+            perl -e 'exit($] >= 5.010 ? 0 : 1)' || cpanm Regexp::Common@2016020301
+            cpanm --test-only --verbose /tmp/dist/$(basename ${{ needs.create-dist.outputs.dist }})
+          EOF
+        if: "matrix.container"
