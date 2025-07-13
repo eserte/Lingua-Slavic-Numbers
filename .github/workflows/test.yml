@@ -50,8 +50,10 @@ jobs:
           - { runs-on: ubuntu-latest, container: "perl:5.36.0-slim-bullseye" }
           - { runs-on: ubuntu-latest, container: "perl:5.38.0-slim-bookworm" }
           - { runs-on: ubuntu-latest, container: "perl:5.40.0-slim-bookworm" }
-          - { runs-on: macos-12 }
+          - { runs-on: ubuntu-latest, container: "perl:5.42.0-slim-bookworm" }
           - { runs-on: macos-13 }
+          - { runs-on: macos-14 }
+          - { runs-on: macos-15 }
           - { runs-on: ubuntu-latest }
           - { runs-on: windows-latest }
     needs: create-dist
@@ -84,7 +86,13 @@ jobs:
       - name: Test with cpanm (container)
         run: |
           docker run -i -v $(pwd):/tmp/dist:ro ${{ matrix.container }} sh <<'EOF'
-            perl -e 'exit($] >= 5.010 ? 0 : 1)' || cpanm Regexp::Common@2016020301
+            perl <<EOP
+              if ($] < 5.010) {
+                system(qw(cpanm Regexp::Common@2016020301));
+              } elsif ($] < 5.014) {
+                system(qw(cpanm Regexp::Common@2017060201));
+              }
+          EOP
             cpanm --test-only --verbose /tmp/dist/$(basename ${{ needs.create-dist.outputs.dist }})
           EOF
         if: "matrix.container"
