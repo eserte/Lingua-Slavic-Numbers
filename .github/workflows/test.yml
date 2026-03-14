@@ -87,9 +87,15 @@ jobs:
           docker run -i -v $(pwd):/tmp/dist:ro ${{ matrix.container }} sh <<'EOF'
             perl <<EOP
               if ($] < 5.010) {
-                system(qw(cpanm Regexp::Common@2016020301));
+                system(qw(cpanm --notest Test::More parent Regexp::Common@2016020301));
               } elsif ($] < 5.014) {
                 system(qw(cpanm Regexp::Common@2017060201));
+              } else {
+                exit 0;
+              }
+              if ($? != 0) {
+                system "cat /root/.cpanm/work/*/build.log";
+                exit 1;
               }
           EOP
             cpanm --test-only --verbose /tmp/dist/$(basename ${{ needs.create-dist.outputs.dist }})
