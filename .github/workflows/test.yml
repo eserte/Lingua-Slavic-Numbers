@@ -15,7 +15,7 @@ jobs:
     outputs:
       dist: ${{ steps.get-dist-name.outputs.dist }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install prereqs
         run: |
           sudo apt-get update -q
