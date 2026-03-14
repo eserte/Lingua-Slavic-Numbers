@@ -37,6 +37,7 @@ jobs:
     name: Test on ${{ matrix.container || matrix.runs-on }}
     runs-on: ${{ matrix.runs-on }}
     strategy:
+      fail-fast: false
       matrix:
         include:
           - { runs-on: ubuntu-latest, container: "perl:5.8.9-threaded-stretch" }
