@@ -53,8 +53,8 @@ jobs:
           - { runs-on: ubuntu-latest, container: "perl:5.40.0-slim-bookworm" }
           - { runs-on: ubuntu-latest, container: "perl:5.42.0-slim-bookworm" }
           - { runs-on: ubuntu-latest, container: "perl:5.44.0-slim-trixie" }
-          - { runs-on: macos-14 }
           - { runs-on: macos-15 }
+          - { runs-on: macos-26 }
           - { runs-on: ubuntu-latest }
           - { runs-on: windows-latest }
     needs: create-dist
